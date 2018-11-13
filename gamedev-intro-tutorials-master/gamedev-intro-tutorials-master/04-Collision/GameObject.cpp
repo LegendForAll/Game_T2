@@ -17,7 +17,7 @@ CGameObject::CGameObject()
 	isvisible = false;
 }
 
-void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects, vector<LPGAMEOBJECT> *coObjectStatic)
 {
 	this->dt = dt;
 	dx = vx * dt; //quang duong di duong theo Ox
@@ -142,16 +142,16 @@ void CGameObject::RenderBoundingBox()
 	GetBoundingBox(l, t, r, b);
 
 	//rect dung de ve hinh minh hoa
-	//rect.left = 0;
-	//rect.top = 0;
-	//rect.right = (int)r - (int)l;
-	//rect.bottom = (int)b - (int)t;
+	rect.left = 0;
+	rect.top = 0;
+	rect.right = (int)r - (int)l;
+	rect.bottom = (int)b - (int)t;
 
 	//rect boundingBox xet va cham
-	rect.left = (int)l;
-	rect.top = (int)t;
-	rect.right = (int)r;
-	rect.bottom = (int)b;
+	//rect.left = (int)l;
+	//rect.top = (int)t;
+	//rect.right = (int)r;
+	//rect.bottom = (int)b;
 
 	CGame::GetInstance()->Draw(X_view, Y_view, bbox, rect.left, rect.top, rect.right, rect.bottom, 32);
 }

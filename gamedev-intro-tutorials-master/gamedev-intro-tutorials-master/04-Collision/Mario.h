@@ -47,7 +47,7 @@ public:
 
 	void LoadAnimation();
 	virtual void LoadResource();
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects , vector<LPGAMEOBJECT> *coObjectStatic );
 	virtual void Render(float xViewport, float yViewport);
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }

@@ -16,7 +16,8 @@ void CGame::Init(HWND hWnd)
 	gameCamera = new CView(0, 20);
 
 	//Init sound
-	Sound * sounds = Sound::GetInstance();
+	//Sound * sounds = Sound::GetInstance();
+	sounds = Sound::GetInstance();
 	sounds->loadSound(hWnd);
 	sounds->PlayLoop(STAGE_01_VAMPIRE_KILLER);
 

@@ -14,6 +14,11 @@ if(p) \
 	p = nullptr; \
 } \
 
+//Flight equation
+#define EQUATION_NORMAL		1
+#define EQUATION_SIN		2
+#define EQUATION_PARAPOL	3
+
 enum eSoundID
 {
 	USING_WHIP,

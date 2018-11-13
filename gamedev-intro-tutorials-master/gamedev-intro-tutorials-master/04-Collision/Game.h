@@ -47,6 +47,7 @@ class CGame
 	//LPKEYEVENTHANDLER keyHandler;
 
 	CView *gameCamera;				// Camera game
+	Sound *sounds;
 
 public:
 	//void InitKeyboard(LPKEYEVENTHANDLER handler);

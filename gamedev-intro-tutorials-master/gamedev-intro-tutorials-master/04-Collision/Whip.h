@@ -21,7 +21,7 @@ public:
 	
 	virtual void LoadResource();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects , vector<LPGAMEOBJECT> *coObjectStatic );
 	virtual void Render(float xViewport, float yViewport);
 
 	void SetPositionLR(float _x, float _y, bool _isStand, bool _isLeft);

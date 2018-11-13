@@ -39,13 +39,14 @@ CGame *game;
 CMario *mario;
 
 TileMap *tilemap;
-//ViewPort *viewPort;
+bool marioInView = false;
 CTextures * textures = CTextures::GetInstance();
+
 DWORD dt;
 vector<LPGAMEOBJECT> objects;
+vector<LPGAMEOBJECT> objecttsStatic;
 
-//float posX = 0.0f;
-bool marioInView = false;
+
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -284,28 +285,44 @@ void LoadResources()
 	Candle *candle = new Candle();
 	candle->LoadResource();
 	candle->SetPosition(200.0f, 340);
-	objects.push_back(candle);
+	//objects.push_back(candle);
+	objecttsStatic.push_back(candle);
 
 	Candle *candle1 = new Candle();
 	candle1->LoadResource();
 	candle1->SetPosition(600.0f, 340);
-	objects.push_back(candle1);
+	//objects.push_back(candle1);
+	objecttsStatic.push_back(candle1);
 
 	Candle *candle2 = new Candle();
 	candle2->LoadResource();
 	candle2->SetPosition(800.0f, 340);
-	objects.push_back(candle2);
+	//objects.push_back(candle2);
+	objecttsStatic.push_back(candle2);
 
 	Candle *candle3 = new Candle();
 	candle3->LoadResource();
 	candle3->SetPosition(1000.0f, 340);
-	objects.push_back(candle3);
+	//objects.push_back(candle3);
+	objecttsStatic.push_back(candle3);
 
 	Items *_it = new Items();
 	_it->LoadResource();
-	_it->SetPosition(300, 370);
+	_it->SetPosition(200, 100);
 	_it->SetState(I_MORNING_STAR);
 	objects.push_back(_it);
+
+	//Items *_it1 = new Items();
+	//_it1->LoadResource();
+	//_it1->SetPosition(600, 100);
+	//_it1->SetState(I_DOUBLE_SHOT);
+	//objects.push_back(_it1);
+
+	//Items *_it3 = new Items();
+	//_it3->LoadResource();
+	//_it3->SetPosition(800, 100);
+	//_it3->SetState(I_BOSS_BAT);
+	//objects.push_back(_it3);
 }
 
 /*
@@ -317,15 +334,29 @@ void Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	vector<LPGAMEOBJECT> coObjects;
+	vector<LPGAMEOBJECT> coObjectsStatic;
+
+	//Update enemy vs simon
 	for (int i = 1; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
-
+	for (int i = 0; i < objecttsStatic.size();i++)
+	{
+		coObjectsStatic.push_back(objecttsStatic[i]);
+	}
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt,&coObjects);
+		objects[i]->Update(dt,&coObjects, &coObjectsStatic);
 	}
+
+	//Update object static
+
+
+	//for (int i = 0; i < objecttsStatic.size();i++)
+	//{
+	//	objecttsStatic[i]->Update(dt, &coObjectsStatic);
+	//}
 
 	if (mario->x > SCREEN_WIDTH / 2 && !marioInView)
 	{
@@ -369,6 +400,10 @@ void Render()
 		for (int i = 1; i < objects.size(); i++)
 			objects[i]->Render(tilemap->GetViewportX(), tilemap->GetViewPortY());
 
+		for (int i = 0; i < objecttsStatic.size(); i++)
+		{
+			objecttsStatic[i]->Render(tilemap->GetViewportX(), tilemap->GetViewPortY());
+		}
 		//render Background
 		//LPDIRECT3DTEXTURE9 texBG = textures->Get(ID_TEX_WHIP);
 		//D3DXVECTOR3 p(50, 50, 0);

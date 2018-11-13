@@ -23,8 +23,10 @@ void CBrick::LoadResource()
 
 void CBrick::Render(float xViewport, float yViewport)
 {
+	this->X_view = x - xViewport;
+	this->Y_view = y - yViewport;
 	animations[0]->Render(x - xViewport,y - yViewport);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)

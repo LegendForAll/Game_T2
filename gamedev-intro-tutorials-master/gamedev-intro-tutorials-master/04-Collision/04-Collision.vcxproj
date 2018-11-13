@@ -135,6 +135,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Items.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="OStatis.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
@@ -157,6 +158,7 @@
     <ClCompile Include="Items.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="OStatis.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />

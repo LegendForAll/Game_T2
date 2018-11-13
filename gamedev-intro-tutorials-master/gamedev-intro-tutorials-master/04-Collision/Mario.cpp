@@ -249,7 +249,7 @@ void CMario::LoadResource()
 	this->AddAnimation(SM_FLY_ATTACK);			//simon fly attack
 }
 
-void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects , vector<LPGAMEOBJECT> *coObjectStatic )
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
@@ -300,7 +300,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * 0.4f;
 
-		//if (nx != 0) vx = 0; //khi mario co va cham theo huong RIGHT-> nx = 1/LEFT->ny = -1
+		if (nx != 0) vx = 0; //khi mario co va cham theo huong RIGHT-> nx = 1/LEFT->ny = -1
 		if (ny != 0) vy = 0; //khi mario co va cham theo huong DOWN-> ny = -1/UP->ny = 1 cho vy = 0 de khong bi roi tu do
 
 		// Collision logic with Object after collision vs mario
@@ -321,6 +321,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<Items *>(e->obj))
 			{
+				Sound::GetInstance()->Play(COLLECT_WEAPON);
 				Items *_item = dynamic_cast<Items *>(e->obj);
 				if (e->nx != 0)
 				{
@@ -340,13 +341,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
-	whip->Update(dt, coObjects);
+	whip->Update(dt, coObjects, coObjectStatic);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	
 }
 
 void CMario::Render(float xViewport, float yViewport)
 {
+	this->X_view = x - xViewport;
+	this->Y_view = y - yViewport;
+
 	//Set left or right weapons
 	whip->SetNX(this->nx);
 
@@ -390,8 +396,8 @@ void CMario::Render(float xViewport, float yViewport)
 	//Render animation of weapon
 	if (isWP)
 	{
-		whip->SetPositionLR(x - xViewport, y - yViewport, isStand, this->isLeft);
-		whip->Render(NULL,NULL);
+		whip->SetPositionLR(x, y, isStand, this->isLeft);
+		whip->Render(xViewport, yViewport);
 	}
 }
 
@@ -428,6 +434,7 @@ void CMario::SetState(int state)
 			}
 			else if ((IsKeyPress(DIK_Z)) && isAttack == false)		//sm attack RIGHT/LEFT
 			{
+				Sound::GetInstance()->Play(USING_WHIP);
 				this->isAttack = true;
 				this->state = SM_STAND_ATTACK;
 				vx = 0;
@@ -465,6 +472,7 @@ void CMario::SetState(int state)
 
 			else if ((IsKeyPress(DIK_Z)) && isAttack == false)		//sm attack RIGHT/LEFT
 			{
+				Sound::GetInstance()->Play(USING_WHIP);
 				this->isAttack = true;
 				this->state = SM_STAND_ATTACK;
 				ani = SM_STAND_ATTACK;
@@ -504,6 +512,7 @@ void CMario::SetState(int state)
 
 			else if (IsKeyPress(DIK_Z) && isAttack == false)				//move - attack - stop move
 			{
+				Sound::GetInstance()->Play(USING_WHIP);
 				vx = 0;
 				this->state = SM_STAND_ATTACK;
 				ani = SM_STAND_ATTACK;
@@ -543,6 +552,7 @@ void CMario::SetState(int state)
 			}
 			else if (IsKeyPress(DIK_Z) && isAttack == false)			//sm sit attack LEFT/RIGHT
 			{
+				Sound::GetInstance()->Play(USING_WHIP);
 				this->state = SM_SIT_ATTACK;
 				ani = SM_SIT_ATTACK;
 				isAttack = true;
@@ -553,6 +563,7 @@ void CMario::SetState(int state)
 
 		case SM_STAND_ATTACK:
 		{
+			
 			if (animations[ani]->CheckDoAllFrame())//finish attack
 			{
 				animations[ani]->SetDoAllFrame(false);
@@ -594,7 +605,7 @@ void CMario::SetState(int state)
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x;
+	left = x + 20;
 	top = y; 
 	right = x + SM_BBOX_WIDTH;
 	bottom = y + SM_BBOX_HEIGHT;

@@ -4,8 +4,10 @@
 #include <d3dx9.h>
 #include <vector>
 
+#include "Game.h"
 #include "Sprites.h"
 #include "Input.h"
+
 
 using namespace std;
 
@@ -96,7 +98,7 @@ public:
 
 	virtual void LoadResource() = 0;
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL, vector<LPGAMEOBJECT> *coObjectStatic = NULL);
 	virtual void Render(float xViewport, float yViewport) = 0;
 	virtual void SetState(int state) { this->state = state; }
 	virtual void SetDead(bool _isDead) { this->isDead = _isDead; }

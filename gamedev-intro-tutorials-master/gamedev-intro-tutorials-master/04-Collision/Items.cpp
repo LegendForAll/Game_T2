@@ -100,6 +100,8 @@ void Items::Render(float xViewport, float yViewport)
 	this->X_view = x - xViewport;
 	this->Y_view = y - yViewport;
 
+
+
 	switch (this->state)
 	{
 		case I_HEART_BIG:
@@ -142,11 +144,12 @@ void Items::Render(float xViewport, float yViewport)
 			currentAni = I_BOSS_BAT;
 			break;
 		}
-
 	}
+
 	if (!(isvisible && isDead))
 	{
 		animations[currentAni]->Render(x - xViewport, y - yViewport);
+		//animations[typeItem]->Render(x - xViewport, y - yViewport);
 		RenderBoundingBox();
 	}
 }
@@ -155,14 +158,77 @@ void Items::GetBoundingBox(float & l, float & t, float & r, float & b)
 {
 	if (!(isvisible && isDead))
 	{
-		l = X_view;
-		t = Y_view;
-		r = X_view + ITEM_BBOX_WIDTH;
-		b = Y_view + ITEM_BBOX_HEIGHT;
+		l = x;
+		t = y;
+		r = x + ITEM_BBOX_WIDTH;
+		b = y+ ITEM_BBOX_HEIGHT;
 	}
 }
 
-void Items::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void Items::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects, vector<LPGAMEOBJECT> *coObjectStatic)
 {
+	// Calculate dx, dy 
+	CGameObject::Update(dt);
 
+	vy += 0.002f * dt;
+
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+
+	coEvents.clear();
+
+
+	CalcPotentialCollisions(coObjects, coEvents); //tao ra danh sach cac doi tuong co kha nang va cham
+
+
+	// No collision occured, proceed normally
+	if (coEvents.size() == 0) //danh sach kha nang va cham rong  x, y mario cap nhat binh thuong
+	{
+		x += dx;
+		y += dy;
+	}
+	else	//co doi tuong co kha nang va cham voi mario
+	{
+		float min_tx, min_ty, nx = 0, ny;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+		// block 
+		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+		y += min_ty * dy + ny * 0.4f;
+
+		if (nx != 0) vx = 0; //khi mario co va cham theo huong RIGHT-> nx = 1/LEFT->ny = -1
+		if (ny != 0) vy = 0; //khi mario co va cham theo huong DOWN-> ny = -1/UP->ny = 1 cho vy = 0 de khong bi roi tu do
+
+		// Collision logic with Object after collision vs mario
+		for (UINT i = 0; i < coEventsResult.size(); i++)//UNIT
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+			//xu ly sau va cham voi Candle => collision whip vs candle
+			if (dynamic_cast<CBrick *>(e->obj))
+			{
+				//Candle *_candle = dynamic_cast<Candle *>(e->obj);
+				//if (e->nx != 0)
+				//{
+				//	//Xu ly sau va cham
+				//	_candle->SetDead(true);
+				//	_candle->SetInvisible(true);
+				//	_candle->SetState(CANDLE_STATE_DIE);
+				//}
+			}
+		}
+	}
+	// clean up collision events
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+void Items::Set_positionSimon(float _xSimon, float _ySimon)
+{
+	this->SetPosition(_xSimon, _ySimon);
+}
+
+void Items::Random_pre()
+{
+	this->typeItem = rand() % 7;
+	this->currentAni = this->typeItem;
 }

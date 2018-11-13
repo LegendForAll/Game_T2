@@ -72,17 +72,17 @@ void Whip::GetBoundingBox(float & l, float & t, float & r, float & b)
 	}
 }
 
-void Whip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects, vector<LPGAMEOBJECT> *coObjectStatic)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
 	vector<LPGAMEOBJECT> coEvent;
-	for (UINT i = 0; i < coObjects->size(); i++)
+	for (UINT i = 0; i < coObjectStatic->size(); i++)
 	{
-		if(this->AABB_BOX(this, coObjects->at(i)))
+		if(this->AABB_BOX(this, coObjectStatic->at(i)))
 		{
-			coEvent.push_back(coObjects->at(i));
+			coEvent.push_back(coObjectStatic->at(i));
 		}
 	}
 
@@ -102,12 +102,14 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						//xu ly cho object
 						Candle *_candle = dynamic_cast<Candle *>(coEvent[i]);
+						Sound::GetInstance()->Play(HIT_SOUND);
 						_candle->SetState(CANDLE_STATE_DIE);
 						_candle->SetDead(true);
 						_candle->SetInvisible(true);
 						animations[currentAni]->SetDoAllFrame(false);
 						this->oneHIT = false;
 						//xu ly cho item
+
 					}
 				}
 			}
@@ -123,7 +125,7 @@ void Whip::Render(float xViewport, float yViewport)
 
 	////choose animation whip stand or sit
 	this->currentAni = isStand ? 0 : 1;
-	animations[currentAni]->Render(this->curX , this->curY , alpha, isLeft);//theo phan tich no la ve tren viewport
+	animations[currentAni]->Render(this->curX - xViewport , this->curY - yViewport , alpha, isLeft);//theo phan tich no la ve tren viewport
 
 
 	//Render boundingBox at end frame of currentAnimation

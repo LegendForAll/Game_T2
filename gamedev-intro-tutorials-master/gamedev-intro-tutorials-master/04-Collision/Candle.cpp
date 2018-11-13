@@ -2,7 +2,11 @@
 
 void Candle::LoadResource()
 {
-	//load resource
+	//load resource item
+
+	
+
+	//load resource candle
 	CTextures * textures = CTextures::GetInstance();
 	textures->Add(ID_TEX_CANDLE, L"Resource\\sprites\\Ground\\0.png", D3DCOLOR_XRGB(255, 0, 255));
 	textures->Add(ID_TEX_DEAD, L"Resource\\sprites\\Effect\\DEAD.png", D3DCOLOR_XRGB(255, 0, 255));
@@ -47,11 +51,11 @@ void Candle::Render(float xViewport, float yViewport)
 		animations[0]->Render(x - xViewport, y - yViewport);
 		RenderBoundingBox();
 	}
-
-	if (timeDelay > 90.0f)
+	else
 	{
 		if (isDead && state == CANDLE_STATE_DIE && !(animations[1]->CheckDoAllFrame()))
 		{
+			//xu ly cho candle die
 			animations[1]->Render(x - xViewport, y - yViewport);
 			if (animations[1]->CheckDoAllFrame())
 			{
@@ -59,6 +63,8 @@ void Candle::Render(float xViewport, float yViewport)
 				animations[1]->SetDoAllFrame(false);
 				this->ResetTime();
 			}
+
+			//Xu ly roi item
 
 		}
 	}
@@ -68,18 +74,15 @@ void Candle::GetBoundingBox(float & l, float & t, float & r, float & b)
 {
 	if (!(isvisible && isDead)) //Kiem tra object co con ton tai tren game sau khi va cham
 	{
-		l = X_view;
-		t = Y_view;
-		r = X_view + CANDLE_BBOX_WIDTH;
-		b = Y_view + CANDLE_BBOX_HEIGHT;
+		l = x;
+		t = y;
+		r = x + CANDLE_BBOX_WIDTH;
+		b = y + CANDLE_BBOX_HEIGHT;
 	}
 }
 
-void Candle::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void Candle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects, vector<LPGAMEOBJECT> *coObjectStatic)
 {
-	if (state == CANDLE_STATE_DIE)
-	{
-		timeDelay += dt * 0.5f;
-	}
+	
 }
 
